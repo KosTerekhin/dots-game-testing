@@ -1,3 +1,3 @@
 module.exports = global.config = {
-	proxy: 'https://starnavi-frontend-test-task.herokuapp.com'
+	proxy: 'https://young-refuge-81500.herokuapp.com/api'
 };

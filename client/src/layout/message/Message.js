@@ -19,15 +19,15 @@ const Message = (props) => {
 			);
 			break;
 		case 'over':
-			props.currentWinner === 'computer'
+			props.latestWinner === 'computer'
 				? (ReturnMSG = (
 						<Card bg="warning">
-							<Card.Body text="dark">Better luck next time...{props.currentWinner} won</Card.Body>
+							<Card.Body text="dark">Better luck next time...{props.latestWinner} won</Card.Body>
 						</Card>
 					))
 				: (ReturnMSG = (
 						<Card bg="success">
-							<Card.Body text="dark">Well done {props.currentWinner}!</Card.Body>
+							<Card.Body text="dark">Well done {props.latestWinner}!</Card.Body>
 						</Card>
 					));
 			break;

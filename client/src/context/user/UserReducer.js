@@ -26,7 +26,14 @@ export default (state, action) => {
 				}
 			};
 
-		case 'WINNER_POSTED':
+		case 'ADD_PLAYERS': {
+			return {
+				...state,
+				allPlayers: action.payload
+			};
+		}
+
+		case 'SERVER_UPDATED': {
 			return {
 				...state,
 				currentUser: {
@@ -34,20 +41,20 @@ export default (state, action) => {
 					date: null,
 					startTime: null
 				},
-				currentWinner: action.payload.name,
-				allPlayers: [ ...state.allPlayers, action.payload ]
-			};
-
-		case 'SERVER_UPDATED': {
-			return {
-				...state,
+				latestWinner: action.payload,
 				serverMsg: 'SUCCESS - results posted to the server'
 			};
 		}
 		case 'SERVER_REJECTED': {
 			return {
 				...state,
-				serverMsg: 'ERROR - did not post results'
+				currentUser: {
+					name: '',
+					date: null,
+					startTime: null
+				},
+				latestWinner: action.payload,
+				serverMsg: 'ERROR - server side'
 			};
 		}
 

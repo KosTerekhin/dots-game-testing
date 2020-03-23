@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import CustomButton from './CustomButton';
 import Option from './Option';
-import Spinner from '../../../componenents/Spinner';
+import Spinner from '../../../globalElements/Spinner';
 
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';

@@ -1,9 +1,7 @@
 import React, { useReducer } from 'react';
 import GameContext from './GameContext';
 import GameReducer from './GameReducer';
-import Axios from 'axios';
-
-import '../../config';
+import Axios from '../../axios/axiosDefault';
 
 const GameState = (props) => {
 	const initialState = {
@@ -20,7 +18,6 @@ const GameState = (props) => {
 	};
 
 	const [ state, dispatch ] = useReducer(GameReducer, initialState);
-	const serverProxy = global.config.proxy;
 
 	// GAME SETTING SELECT + UPDATE PLAY AREA
 	const changeGame = (params) => {
@@ -69,7 +66,7 @@ const GameState = (props) => {
 	// FETCH GAME SETTINGS
 	const fetchGameSettings = async () => {
 		try {
-			const res = await Axios.get(`${serverProxy}/game-settings`);
+			const res = await Axios.get(`/game-settings`);
 
 			dispatch({
 				type: 'GET_SETTINGS',

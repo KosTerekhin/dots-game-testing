@@ -8,12 +8,12 @@ import UserContext from '../../context/user/UserContext';
 
 const GameBoard = () => {
 	const { gameState, error } = useContext(GameContext);
-	const { currentWinner } = useContext(UserContext);
+	const { latestWinner } = useContext(UserContext);
 
 	return (
 		<div className="GameBoard">
 			<NavButtons />
-			<Message type={gameState} currentWinner={currentWinner} error={error} />
+			<Message type={gameState} latestWinner={latestWinner} error={error} />
 			<PlayArea />
 		</div>
 	);

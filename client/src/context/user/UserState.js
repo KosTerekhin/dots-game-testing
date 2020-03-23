@@ -1,8 +1,7 @@
 import React, { useReducer } from 'react';
 import UserContext from './UserContext';
 import UserReducer from './UserReducer';
-import Axios from 'axios';
-import '../../config';
+import Axios from '../../axios/axiosDefault';
 
 const UserState = (props) => {
 	const initialState = {
@@ -10,41 +9,32 @@ const UserState = (props) => {
 			name: '',
 			startTime: null
 		},
-		currentWinner: '',
+		latestWinner: '',
 		allPlayers: [],
 		serverMsg: null
 	};
 
 	const [ state, dispatch ] = useReducer(UserReducer, initialState);
-	const serverProxy = global.config.proxy;
 
 	const postWinner = async (winner, endTime) => {
 		// winner to send on the server
-		let newWinner = {
+		const newPlayer = {
+			time: (endTime - state.currentUser.startTime) / 1000,
 			date: new Date().toLocaleString()
 		};
-		if (winner === 'player') {
-			newWinner.winner = state.currentUser.name;
-		} else {
-			newWinner.winner = winner;
-		}
-		// user to update the UI
-		const newPlayer = {
-			name: newWinner.winner,
-			time: (endTime - state.currentUser.startTime) / 1000,
-			date: newWinner.date
-		};
 
-		dispatch({
-			type: 'WINNER_POSTED',
-			payload: newPlayer
-		});
+		if (winner === 'player') {
+			newPlayer.name = state.currentUser.name;
+		} else {
+			newPlayer.name = winner;
+		}
 
 		try {
-			await Axios.post(`${serverProxy}/winners`, newWinner);
+			await Axios.post(`/winners`, newPlayer);
 
 			dispatch({
-				type: 'SERVER_UPDATED'
+				type: 'SERVER_UPDATED',
+				payload: newPlayer.name
 			});
 
 			setTimeout(() => {
@@ -52,6 +42,36 @@ const UserState = (props) => {
 					type: 'CLEAR_MESSAGE'
 				});
 			}, 2000);
+		} catch (error) {
+			dispatch({
+				type: 'SERVER_REJECTED',
+				payload: newPlayer.name
+			});
+
+			setTimeout(() => {
+				dispatch({
+					type: 'CLEAR_MESSAGE'
+				});
+			}, 2000);
+
+			throw error;
+		}
+	};
+
+	const getAllPlayers = async () => {
+		try {
+			const res = await Axios.get(`/winners`);
+
+			const topTen = res.data
+				.sort((a, b) => {
+					return a.time - b.time;
+				})
+				.slice(0, 9);
+
+			dispatch({
+				type: 'ADD_PLAYERS',
+				payload: topTen
+			});
 		} catch (error) {
 			dispatch({
 				type: 'SERVER_REJECTED'
@@ -87,11 +107,12 @@ const UserState = (props) => {
 				currentUser: state.currentUser,
 				allUsers: state.allUsers,
 				allPlayers: state.allPlayers,
-				currentWinner: state.currentWinner,
+				latestWinner: state.latestWinner,
 				serverMsg: state.serverMsg,
 				setUser,
 				postWinner,
-				setStartTime
+				setStartTime,
+				getAllPlayers
 			}}
 		>
 			{props.children}

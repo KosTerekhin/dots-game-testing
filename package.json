@@ -19,7 +19,7 @@
     "nodemon": "^2.0.2"
   },
   "dependencies": {
-    "config": "^3.3.0",
+    "config": "^3.3.8",
     "express": "^4.17.1",
     "mongoose": "^5.9.5"
   }
